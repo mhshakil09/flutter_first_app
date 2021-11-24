@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first_app/answer.dart';
+import 'package:flutter_first_app/quiz.dart';
+import 'package:flutter_first_app/result.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import './question.dart';
@@ -12,9 +14,49 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var _questionIndex = 0;
+  final _questions = const [
+    {
+      'questionText': "what's your favorite color?",
+      'answers': [
+        {'text': 'black', 'score': 2},
+        {'text': 'blue', 'score': 5},
+        {'text': 'green', 'score': 8},
+        {'text': 'red', 'score': 4}
+      ]
+    },
+    {
+      'questionText': "what's your favorite food?",
+      'answers': [
+        {'text': 'sweets', 'score': 8},
+        {'text': 'spicy', 'score': 7},
+        {'text': 'ice-cream', 'score': 10},
+        {'text': 'all', 'score': 5}
+      ]
+    },
+    {
+      'questionText': "what's your favorite game?",
+      'answers': [
+        {'text': 'cs', 'score': 8},
+        {'text': 'bs', 'score': 7},
+        {'text': 'pd', 'score': 6},
+        {'text': 'vr', 'score': 6}
+      ]
+    },
+  ];
 
-  void _answerQuestion() {
+  var _questionIndex = 0;
+  var _totalScore = 0;
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
       _questionIndex += 1;
     });
@@ -32,36 +74,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      {
-        'questionText': "what's your favorite color?",
-        'answers': ['black', 'blue', 'green', 'red']
-      },
-      {
-        'questionText': "what's your favorite food?",
-        'answers': ['sweets', 'spicy', 'ice-cream', 'all']
-      },
-      {
-        'questionText': "what's your favorite game?",
-        'answers': ['cs', 'bs', 'pd', 'vr']
-      },
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text("Hello MHS"),
         ),
-        body: Column(
-          children: [
-            // Text(questions[_questionIndex]),
-            Question(
-              questions[_questionIndex]['questionText'].toString(),
-            ),
-            ...(questions[_questionIndex]['answers'] as List<String>)
-                .map((answer) => Answer(_answerQuestion ,answer)).toList()
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }

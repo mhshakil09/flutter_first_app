@@ -10,14 +10,17 @@ class Answer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        child: Text(
-          answerText,
-          style: TextStyle(color: Colors.black),
+      child: Container(
+        child: ElevatedButton(
+          child: Text(
+            answerText,
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () {
+            selectHandler();
+          },
         ),
-        onPressed: () {
-          selectHandler();
-        },
+        margin: EdgeInsets.fromLTRB(8, 0, 8, 0),
       ),
     );
   }
